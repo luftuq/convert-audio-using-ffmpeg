@@ -1,0 +1,11 @@
+name: base
+channels:
+- conda-forge
+dependencies:
+- ffmpeg
+- flake8-noqa
+- mypy
+- parallel
+- pydub
+- wemake-python-styleguide
+
