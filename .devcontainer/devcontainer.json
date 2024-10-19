@@ -24,8 +24,6 @@
                 "ms-python.python"
             ]
         }
-    }
-    //"postCreateCommand": "chown -R mambauser:mambauser /workspace",
-    //"postCreateCommand": "chmod +x /workspaces/mp4-to-mp3/convert_m4a_to_mp3.sh"
+    },
     "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && git config --global user.signingkey /home/mambauser/.ssh/id_ed25519.pub"
 }
