@@ -7,5 +7,6 @@ dependencies:
 - mypy
 - parallel
 - pydub
+- ruff
 - wemake-python-styleguide
 
