@@ -5,18 +5,17 @@
 
 # Define the directory, input formats, and output format directly in the script
 ROOT_DIR="/workspaces/convert-audio-using-ffmpeg"  # Root directory containing the audio files
-INPUT_FORMATS=("m4a" "wav")                        # Input formats (e.g., m4a, wav)
+INPUT_FORMATS=("m4a" "wav" "m4b")                  # Input formats (e.g., m4a, wav, m4b)
 OUTPUT_FORMAT="mp3"                                # Desired output format (e.g., mp3)
 
 # Function to convert a single file from input format to output format
 convert_audio_file() {
     local input_file="$1"
     local output_file="$2"
-    local input_format="$3"
-    local output_format="$4"
     
-    # Perform the conversion using ffmpeg
-    ffmpeg -i "$input_file" "$output_file" -loglevel error
+    # Perform the conversion using ffmpeg. 
+    # -af "asetpts=N/SR/TB" discards broken source timestamps and forces strict sequential timestamps.
+    ffmpeg -y -i "$input_file" -map 0:a -map 0:v? -c:a libmp3lame -af "asetpts=N/SR/TB" -c:v copy -id3v2_version 3 "$output_file" -loglevel error
     
     # Check if the conversion was successful
     if [ $? -eq 0 ]; then
@@ -35,4 +34,4 @@ find "$ROOT_DIR" -type f \( \
     -iname "*.${INPUT_FORMATS[0]}" \
     $(for fmt in "${INPUT_FORMATS[@]:1}"; do echo -o -iname "*.${fmt}"; done) \
 \) | parallel --no-notice -j+0 \
-    convert_audio_file {} "{.}.$OUTPUT_FORMAT" "{.##*.}" "$OUTPUT_FORMAT"
+    convert_audio_file {} "{.}.$OUTPUT_FORMAT"
